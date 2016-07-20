@@ -11,16 +11,22 @@ class BaseModel(object):
         Dynamically assign all attributes in `json_data` as instance
         attributes of the Model.
         """
-        pass
-
+        for key, value in json_data:
+            setattr(self, key, value)
+            
+     
+     
     @classmethod
     def get(cls, resource_id):
         """
         Returns an object of current Model requesting data to SWAPI using
         the api_client.
         """
-        pass
 
+        temp = getattr(api_client, "get_" + cls.RESOURCE_NAME)
+        return cls(temp(resource_id))
+    
+        
     @classmethod
     def all(cls):
         """
@@ -28,7 +34,9 @@ class BaseModel(object):
         later in charge of performing requests to SWAPI for each of the
         pages while looping.
         """
-        pass
+        # Create QuerySet object / initiate iterator and return??
+   
+        globals()[cls]
 
 
 class People(BaseModel):
@@ -55,16 +63,25 @@ class Films(BaseModel):
 class BaseQuerySet(object):
 
     def __init__(self):
-        pass
+        # will need to initiate iterator andget return?
+        self.qs = api_client.get_all(self.RESOURCE_NAME)
 
+        
     def __iter__(self):
-        pass
+        return self
 
     def __next__(self):
         """
         Must handle requests to next pages in SWAPI when objects in the current
         page were all consumed.
         """
+        # How to ^^
+        
+        # if self.index > count():
+        #     raise StopIteration
+        # else:
+        #     self.index += 1
+        #     return self.index
         pass
 
     next = __next__
@@ -76,6 +93,8 @@ class BaseQuerySet(object):
         a new request is performed to the API in order to get it.
         """
         pass
+    
+
 
 
 class PeopleQuerySet(BaseQuerySet):
